@@ -1,0 +1,2 @@
+import { Component } from '@angular/core'; import { RouterLink,RouterLinkActive } from '@angular/router';
+@Component({selector:'app-customer-nav',standalone:true,imports:[RouterLink,RouterLinkActive],template:`<nav class="bottom-nav" aria-label="Navegación principal"><a routerLink="/inicio" routerLinkActive="active"><span>⌂</span>Inicio</a><a routerLink="/pedidos" routerLinkActive="active"><span>▤</span>Pedidos</a><a routerLink="/perfil" routerLinkActive="active"><span>○</span>Perfil</a></nav>`}) export class CustomerNavComponent {}

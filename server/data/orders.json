@@ -1,0 +1,34 @@
+{
+  "orders": [
+    {
+      "id": "FO-MVD8HY6Z-IDEO",
+      "createdAt": "2026-10-18T02:56:37.216Z",
+      "items": [
+        {
+          "key": "[3,[\"Huevo\",\"Queso extra\",\"Tocino extra\"],\"\"]",
+          "product": {
+            "id": 3,
+            "name": "Chicken Crispy",
+            "description": "Pollo crocante, lechuga y mayonesa",
+            "price": 20,
+            "category": "Hamburguesas",
+            "icon": "🍗"
+          },
+          "quantity": 1,
+          "extras": [
+            "Huevo",
+            "Queso extra",
+            "Tocino extra"
+          ],
+          "notes": "",
+          "unitPrice": 30
+        }
+      ],
+      "total": 30,
+      "type": "Recojo en local",
+      "status": "Recibido",
+      "estimateMinutes": 15
+    }
+  ],
+  "subscriptions": []
+}

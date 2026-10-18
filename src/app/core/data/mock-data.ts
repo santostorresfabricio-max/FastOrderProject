@@ -1,0 +1,9 @@
+import { Product } from '../models/product.model';
+export const PRODUCTS: Product[] = [
+ {id:1,name:'Clásica FastOrder',description:'Carne, lechuga, tomate, queso y salsa especial',price:18,category:'Hamburguesas',icon:'🍔',popular:true},
+ {id:2,name:'Doble Carne',description:'Doble carne, cheddar, tocino y salsa BBQ',price:24,category:'Hamburguesas',icon:'🍔',popular:true},
+ {id:3,name:'Chicken Crispy',description:'Pollo crocante, lechuga y mayonesa',price:20,category:'Hamburguesas',icon:'🍗'},
+ {id:4,name:'Veggie Burger',description:'Hamburguesa vegetariana con vegetales frescos',price:19,category:'Hamburguesas',icon:'🥬'},
+ {id:5,name:'Papas Grandes',description:'Papas doradas con sal de la casa',price:10,category:'Papas',icon:'🍟'},
+ {id:6,name:'Coca Cola 500 ml',description:'Bebida helada',price:6,category:'Bebidas',icon:'🥤'}
+];

@@ -1,0 +1,24 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { BrandComponent } from '../../shared/components/brand.component';
+import { OrderStore } from '../../core/services/order-store.service';
+import { Order,OrderStatus } from '../../core/models/product.model';
+@Component({selector:'app-kitchen-page',standalone:true,imports:[CommonModule,FormsModule,RouterLink,BrandComponent],template:`
+<div class="desktop-app"><aside class="sidebar"><app-brand/><nav><a routerLink="/cocina" class="active">▦ Pedidos</a><a routerLink="/inicio">↖ Volver al sitio</a></nav><div class="user-mini"><span>CM</span><div><b>Cocina</b><small>Modo demostración</small></div></div></aside>
+<main class="kitchen-main"><header><div><p class="eyebrow">KITCHEN DISPLAY SYSTEM</p><h1>{{detail?'Detalle del pedido':'Pedidos en cocina'}}</h1><p>Pedidos recibidos desde el servidor y actualizados en tiempo real mediante eventos.</p></div><div class="live">● {{store.remote.serverAvailable()?'Servidor conectado':'Modo local / sin servidor'}}</div></header>
+<section *ngIf="!detail"><label class="kitchen-pin">PIN de cocina (solo si está configurado en el servidor): <input type="password" [(ngModel)]="kitchenPin" (ngModelChange)="savePin()" placeholder="PIN" autocomplete="off"></label><div class="stats"><article><span>Recibidos</span><b>{{count('Recibido')}}</b><small>Por preparar</small></article><article><span>En preparación</span><b>{{count('En preparación')}}</b><small>Pedidos activos</small></article><article><span>Listos</span><b>{{count('Listo para recoger')}}</b><small>Esperando recojo</small></article></div>
+<div class="board"><section *ngFor="let status of statuses"><h2>{{status}} <span>{{count(status)}}</span></h2><article class="ticket" *ngFor="let order of byStatus(status)"><div class="ticket-head"><b>#{{order.id}}</b><time>{{order.createdAt | date:'HH:mm'}}</time></div><p *ngFor="let line of order.items">{{line.quantity}}× {{line.product.name}} <small>{{line.extras.join(', ')}}</small></p><a [routerLink]="['/cocina/pedido',order.id]" class="primary-btn">Ver pedido</a></article></section></div><p *ngIf="!store.orders().length" class="kitchen-empty">Todavía no hay pedidos. Confirma uno desde el sitio para visualizarlo aquí.</p></section>
+<section *ngIf="detail"><label class="kitchen-pin">PIN de cocina: <input type="password" [(ngModel)]="kitchenPin" (ngModelChange)="savePin()" placeholder="PIN" autocomplete="off"></label><a routerLink="/cocina" class="back">← Volver al tablero</a><ng-container *ngIf="selectedOrder as order"><div class="kitchen-grid"><article class="panel"><div class="ticket-head"><div><small>Pedido</small><h2>#{{order.id}}</h2></div><span class="status orange">{{order.status}}</span></div><div class="meta"><div><small>Hora</small><b>{{order.createdAt | date:'dd/MM HH:mm'}}</b></div><div><small>Tipo</small><b>{{order.type}}</b></div><div><small>Total</small><b>S/ {{order.total.toFixed(2)}}</b></div></div><h3>Productos</h3><div class="k-line" *ngFor="let line of order.items"><span>{{line.product.icon}}</span><div><b>{{line.product.name}} ×{{line.quantity}}</b><small>{{line.extras.join(', ')}} {{line.notes}}</small></div></div></article><aside class="panel action-panel"><h3>Actualizar estado de prueba</h3><p>Los cambios se reflejan en los dispositivos conectados. Push remoto requiere configurar las claves VAPID del servidor.</p><button *ngIf="order.status==='Recibido'" class="primary-btn" (click)="setStatus(order,'En preparación')">Iniciar preparación</button><button *ngIf="order.status==='En preparación'" class="success-btn" (click)="setStatus(order,'Listo para recoger')">Marcar como listo</button><button *ngIf="order.status==='Listo para recoger'" class="success-btn" (click)="setStatus(order,'Entregado')">Marcar como entregado</button><p *ngIf="order.status==='Entregado'">Pedido completado.</p></aside></div></ng-container><p *ngIf="!selectedOrder">Pedido no encontrado.</p></section>
+</main></div>`})
+export class KitchenPageComponent {
+ detail=false; kitchenPin=sessionStorage.getItem('fastorder_kitchen_pin')||'';
+ savePin(){sessionStorage.setItem('fastorder_kitchen_pin',this.kitchenPin);}
+ readonly statuses:OrderStatus[]=['Recibido','En preparación','Listo para recoger'];
+ constructor(public route:ActivatedRoute,public store:OrderStore){this.detail=!!route.snapshot.data['detail'];}
+ get selectedOrder(){return this.store.orders().find(o=>o.id===this.route.snapshot.paramMap.get('id'))??null;}
+ count(status:OrderStatus){return this.store.orders().filter(o=>o.status===status).length;}
+ byStatus(status:OrderStatus){return this.store.orders().filter(o=>o.status===status);}
+ setStatus(order:Order,status:OrderStatus){this.store.updateStatus(order.id,status);}
+}
